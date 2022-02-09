@@ -9,6 +9,7 @@ export default () => {
 
   const [movieList, setMovieList] = useState([]);
   const [featuredData, setfeaturedData] = useState(null);
+  const [blackHeader, setBlackHeader] = useState(false);
 
   useEffect(()=>{
     const loadAll = async () => {
@@ -29,24 +30,43 @@ export default () => {
   }, []);
 
 
+  useEffect(()=>{
+    const scrollListener = () => {
+      if(window.scrollY > 10) {
+        setBlackHeader(true);
+      } else {
+        setBlackHeader(false);
+      }
+    }
+
+    window.addEventListener('scroll', scrollListener);
+    return () => {
+    window.removeEventListener('scroll', scrollListener);
+    }
+  }, []);
+
+
     return (
       <div className="page">
 
-      <Header />
+      <Header black={blackHeader} />
 
 
       {featuredData &&
         <FeaturedMovie item={featuredData} />
       }
 
-
-
-
         <section className="lists">
           {movieList.map((item, key)=>(
             <MovieRow key={key} title={item.title} items={item.items} />
           ))}
         </section>
+
+        <footer>
+          Feito com <span role="img" aria-label="coração">❤️</span><br/>
+          Direitos de imagem para Netflix<br/>
+          Dados pegos do site Themoviedb.org
+        </footer>
       </div>
     );
   }
